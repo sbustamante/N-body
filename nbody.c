@@ -1,8 +1,8 @@
 #include <allvars.h>
 
 //Uso: Nbody.out 
-//		<(1) si desea correr las IC.	(0) si desea proveer las IC con datos.in>
-//		<(1) si desea hacer video.	(2) si no desea hacer video>
+//		<(1-Null) si desea correr las IC.	(0) si desea proveer las IC con datos.in>
+//		<(1-Null) si desea hacer video.		(0) si no desea hacer video>
 
 int main( int argc, char *argv[] )
 {
