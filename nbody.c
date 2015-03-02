@@ -22,7 +22,7 @@ int main( int argc, char *argv[] )
     galaxy[0].N = (int)prmt[N_PART];
 
     //Generacion y lectura de condiciones iniciales
-    if( argv[1]==NULL || atoi(argv[1])!=1 )
+    if( argv[1]==NULL || atoi(argv[1])==1 )
  	initial_conditions( galaxy, prmt, "datos.in" );
     else
       	if( data_in( galaxy, "datos.in")==1 ) return 0;
@@ -45,7 +45,7 @@ int main( int argc, char *argv[] )
 	    fprintf( script, "%s", str );
 	    sprintf( str, "set xrange [%lf:%lf] \nset yrange [%lf:%lf]\n", -100.,100.,-100.,100. );
 	    fprintf( script, "%s", str );
-	    sprintf( str, "plot './datos/Galaxy%05d' u 2:3 w p 14",j );
+	    sprintf( str, "plot './datos/Galaxy%05d' u 2:3 w p ls 14",j );
 	    fprintf( script, "%s", str );
 	    fclose(script);
 	    system("gnuplot script.gpl");}
@@ -65,7 +65,7 @@ int main( int argc, char *argv[] )
      if( argv[2]==NULL || atoi(argv[2])==1 ){    
 	//Eliminacion de archivos temporales -----------------
 // 	system("rm -rf *.tmp");
- 	system("ffmpeg -f image2 -i _tmp-%05d.png  video.mpg");
+ 	system("ffmpeg -qscale 1 -r 10 -b 9600 -i _tmp-%05d.png  video.mp4");
 //         system("convert -delay .1 -loop 0 *.png animacion.gif");
 	system("rm -rf *.png");
 	system("rm -rf script.gpl");}
