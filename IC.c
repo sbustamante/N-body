@@ -11,8 +11,9 @@ int main(void){
 
 	double IC[NMAX1];
 	int i;
-	struct particle stars[NMAX];
+	struct cluster galaxy[1];
 	FILE *Data;
+	char trash[NMAX2];
 
 	//Recoleccion de datos de entrada
 	Data=fopen("parametros.conf","r");
@@ -23,24 +24,24 @@ int main(void){
 	
 	//Cubic Uniform distribution (with random velocities)
 	switch( IC[TYP_DIS] == 0 )
-	    uniform_cube(stars, IC);
+	    uniform_cube(galaxy, IC);
 	//Spherical Uniform distribution (with random velocities)
 	switch( IC[TYP_DIS] == 1 )
-	    uniform_sphere(stars, IC);
+	    uniform_sphere(galaxy, IC);
 	//Disk Uniform Distribution (with random velocities)
 	switch( IC[TYP_DIS] == 2 )
-	    uniform_disk(stars, IC);
+	    uniform_disk(galaxy, IC);
 	switch( IC[TYP_DIS] == 3 )
 	//Disk Uniform distribution (with circular velocities)
-	uniform_disk_vel_ang(stars, IC);
+	uniform_disk_vel_ang(galaxy, IC);
 	
 	
 	//Output datas
-	Data=fopen("datosin.dat","w");
+	Data=fopen("datos.in","w");
 	for(i=0;i<IC[N_PART];i++)
 		fprintf(Data,"%lf %lf %lf %lf %lf %lf %lf %lf\n"\
-		, stars[i].m, stars[i].r[X], stars[i].r[Y], stars[i].r[Z]\
-		, stars[i].v[X], stars[i].v[Y], stars[i].v[Z], stars[i].eps);
+		, galaxy[0].prts[i].m, galaxy[0].prts[i].r[X], galaxy[0].prts[i].r[Y], galaxy[0].prts[i].r[Z]\
+		, galaxy[0].prts[i].v[X], galaxy[0].prts[i].v[Y], galaxy[0].prts[i].v[Z], galaxy[0].prts[i].eps);
 	fclose(Data);
 
 	return 0;
