@@ -1,4 +1,5 @@
 # N-body
+**Sebastian Bustamante** (macsebas33@gmail.com)
 A very basic implementation of a N-body simulation
 
 ## Compiling
