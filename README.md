@@ -1,20 +1,13 @@
-# N-body
+# Tree-Code
 **Sebastian Bustamante** (macsebas33@gmail.com)
 
-A very basic implementation of a N-body simulation
+A basic implementation of a Tree Code algorithm along with routines to compute forces through multipole expansion and direct summation.
 
-## Compiling
-This code comes with two different modules. The first one is a generator of initial conditions. 
-For compiling this module you must run
+## General
+For compiling
 
-  $ make IC.out
-  
+  $ make TreeCode
 
-The other module, and the principal one, is Nbody. This can be compiled as
+Usage
 
-  $ make Nbody.out
-  
-Each module calls the file **parametros.conf**. There you can configure the integrator scheme and
-the initial conditions IC (read the parameter file in order to see the available IC).
-Each set of ICs must be provided with a set of parameters. Consult the file **distributions.c** for 
-the parameters required by each IC.
+  $ ./TreeCode [parameters] [IC_file] [Output tree (optional)] [Output forces (optional)]

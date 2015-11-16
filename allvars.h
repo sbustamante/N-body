@@ -1,70 +1,51 @@
-/********************************************************************
-			       MACROS
-********************************************************************/
-//Macros generales
-#define MAXNPARTICLES 	10000
-#define NMAX1 		10
-#define NMAX2 		100
-#define NMAX3 		1000
+/**************************************************************************************************
+			      MACROS
+**************************************************************************************************/
+//General Macros
+#define NMAX1		100
+#define NMAX2		1000
+#define MY_FREE(ptr)	free(ptr); ptr = NULL;
 
-//Constantes fisicas
-#define GC		1
+//Macros for Parameters
+#define LBOX		0		//Length of the Simulation
+#define NPAR		1		//Number of Particles
+#define NHIE		2		//Maximal number of hierarchies
+#define THEC		3		//Threshold angle
+#define EPSS		4		//Epsilon softening
 
-//Macros de parametros
-#define N_PART		0
-#define T_STEP		1
-#define T_MAX		2
+//Macros of Physical constants
+#define GC		1		//Cavendish Constant
 
-#define TYP_INT		3
-
-#define TYP_DIS		4
-#define COOR_1		5
-#define COOR_2		6
-#define COOR_3		7
-#define VEL_1		8
-#define VEL_2		9
-#define VEL_3		10
-#define MAS_MIN		11
-#define MAS_MAX		12
-#define SOF_MIN		13
-#define SOF_MAX		14
-
-//Macros de variables
-#define X		0
-#define Y		1
-#define Z		2
+//Other macros
+#define X		0		//X coordinate
+#define Y		1		//Y coordinate
+#define Z		2		//Z coordinate
 
 
-/********************************************************************
-			     ESTRUCTURAS
-********************************************************************/
-
-struct particle{
+/**************************************************************************************************
+			      STRUCTURES
+**************************************************************************************************/
+//Structure of particles including tree information
+struct particle
+{
+    //Mass
     double m;
-    double r[3], v[3];
-    double Ek, Ep;
-    
-    double eps;
-    signed int inter;
-    int compa[10];};
+    //Position
+    double r[3];
+    //Velocity
+    double v[3];
+    //Force
+    double f[3];
+};
 
 
-struct cluster{
-    int N;
-    double t_snap;
-    double Ek, Ep;
-    struct particle prts[MAXNPARTICLES];};
-    
-    
-struct intg_step{
-    double r[3], v[3];};
-    
-   
-/********************************************************************
+/**************************************************************************************************
 			      HEADERS
-********************************************************************/
+**************************************************************************************************/
 #include <stdio.h>
 #include <math.h>
-#include <proto.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
+
+#include "proto.h"

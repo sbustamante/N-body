@@ -1,0 +1,18 @@
+#**************************************************************************************************
+#	TREE CODE: CONFIGURATION FILE
+#**************************************************************************************************
+#
+#Box Length [arbitrary units]
+lbox		=	1
+#
+#Number of Particles
+npar		=	500
+#
+#Maximal number of hierarchies
+nhie		=	6
+#
+#Threshold angle
+thec		=	0.2
+#
+#Softening parameter
+epss		=	0.001
