@@ -10,10 +10,8 @@
 #--------------------------------------------------------------------------------------------------
 #Generate initial conditions
 # OPT   +=  -DINITIAL_CONDITIONS
-#Print Tree information
-# OPT   +=  -DPRINT_TREE
-#Print Particles Forces
-OPT   +=  -DPRINT_FORCES
+#Periodic conditions
+OPT   +=  -DPERIODIC_BOX
 
 #--------------------------------------------------------------------------------------------------
 # Find below the compilation options
@@ -27,7 +25,7 @@ LIBS	= -lm
 
 EXEC   = Nbody
 
-OBJS   = main.o  inout.o  force.o
+OBJS   = main.o  inout.o  physics.o  numeric.o
 
 INCL   = allvars.h  proto.h  makefile
 

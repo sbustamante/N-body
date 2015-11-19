@@ -9,38 +9,41 @@
 
 int main( int argc, char *argv[] )
 {
-    int n;    
-    //Parameters
-    float p[NMAX1];
-    //Structures
-    struct particle *particles;
-    
+    int i, it;
+    double t;
+    char out_filename[NMAX1];
     
     printf( "\n\n******************************** NBODY CODE ********************************\n" );
+    printf( "  by: Sebastian Bustamante (sebastian.bustamante@h-its.org)\n" );
     //Loading Configuration File
-    read_parameters( p, argv[1] );
-   
+    read_parameters( argv[1] );
     //Allocating memory for particles
-    particles = (struct particle *)calloc( (int)(p[NPAR]), sizeof( struct particle ) );
+    part = (struct particle *)calloc( (int)(p[NPAR]), sizeof( struct particle ) );
      
     //Loading or generating initial conditions
 #ifdef INITIAL_CONDITIONS
 #else
     //Reading ICs
-    IC_reader( particles, argv[2], p );
+    IC_reader( argv[2] );
 #endif
     
-    //Computing forces by using Direct sum method--------------------------------------------------
-    direct_force( particles, p );
-    	    
-    //Storing result of Tree forces
-#ifdef PRINT_FORCES
-  #ifdef PRINT_TREE
-    out_particles( particles, argv[4], p );
-  #else
-    out_particles( particles, argv[3], p );
- #endif
-#endif
+    //Integration
+    printf( "  * Starting integration\n" );
+    t = 0; it = 0;
+    while( t<=p[TMAX] )
+    {
+	//Leap-frog
+	for( i=0; i<(int)p[NPAR]; i++ )
+	    leap_frog( i, t, part[i].r, part[i].v, part[i].a );
+	//printing snapshot
+	sprintf( out_filename, "%s_%d", argv[3], it );
+	out_snapshot( out_filename );
+	//Time step
+	t += p[TSTP]; it ++;
+    }
+    printf( "  * %d snapshots produced\n", it-1 );
     
+    printf( "  * Nbody done successfully\n" );
+    printf( "****************************************************************************\n\n" );
     return 0;
 }

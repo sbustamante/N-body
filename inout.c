@@ -14,15 +14,17 @@ int parameter_index( char parameter_name[] )
     char *parameter_names[NMAX1];
     parameter_names[LBOX] = "lbox";
     parameter_names[NPAR] = "npar";
-    parameter_names[NHIE] = "nhie";
-    parameter_names[THEC] = "thec";
+    parameter_names[TMAX] = "tmax";
+    parameter_names[TSTP] = "tstp";
     parameter_names[EPSS] = "epss";
     
     //Searching index
     for( i=0; i<NMAX1; i++ )
-	if( strcmp( parameter_names[i], parameter_name ) == 0 ){
+	if( strcmp( parameter_names[i], parameter_name ) == 0 )
+	{
 	    index = i;
-	    break;}
+	    break;
+	}
 	    
     return index;
 }
@@ -53,13 +55,11 @@ int conf2dump( char filename[] )
 /**************************************************************************************************
  NAME:       read_parameters
  FUNCTION:   reads the file with given name and load information of array given
- INPUTS:     array where it returns reading data and file name 
-	     with configuration file
+ INPUTS:     filename with configuration file
  RETURN:     0 if file read ok
 	     1 if file dont exist
 **************************************************************************************************/
-int read_parameters( float parameters[],
-		     char filename[] )
+int read_parameters( char filename[] )
 {
     char buf[NMAX1], filenamedump[NMAX1];
     char names[NMAX1];
@@ -67,9 +67,11 @@ int read_parameters( float parameters[],
 
     //Load of File
     file_values = fopen( filename, "r" );
-    if( file_values==NULL ){
+    if( file_values==NULL )
+    {
 	printf( "  * The file '%s' don't exist!\n", filename );
-	return 1;}
+	return 1;
+    }
     fclose(file_values);
     
     //Converting to plain text
@@ -83,9 +85,11 @@ int read_parameters( float parameters[],
     file_values = fopen( filenamedump, "r" );
     
     //Reading
-    while( getc( file_values ) != EOF ){
+    while( getc( file_values ) != EOF )
+    {
 	fscanf( file_names, "%s", names );
-	fscanf( file_values, "%f", &parameters[ parameter_index( names ) ] );}
+	fscanf( file_values, "%f", &p[ parameter_index( names ) ] );
+    }
 	
     fclose( file_names );
     fclose( file_values );
@@ -102,31 +106,35 @@ int read_parameters( float parameters[],
 /**************************************************************************************************
  NAME:       IC_reader
  FUNCTION:   read input file with positions of particles
- INPUTS:     particle structure, input file name, parameters
+ INPUTS:     input file name
  RETURN:     0 if file read ok
 	     1 if file dont exist
 **************************************************************************************************/
-int IC_reader( struct particle particles[],
-	       char filename[],
-	       float *p )
+int IC_reader( char filename[] )
 {
-    int i=0, j=0, Ndats;
-    char cmd[100], filenamedump[100];
+    int i;
     FILE *file;
-    float tmp;
     
     //File Detection
     file = fopen( filename, "r" );
-    if( file==NULL ){
+    if( file==NULL )
+    {
 	printf( "  * The file '%s' don't exist!\n", filename );
-	return 1;}
+	return 1;
+    }
 	
-    //Read data
+    //Reading data
     for( i=0; i<(int)p[NPAR]; i++ )
     {
-	fscanf( file,"%lf %lf %lf %lf", 
-		&particles[i].m, &particles[i].r[X], &particles[i].r[Y], &particles[i].r[Z] );
+	fscanf( file,"%lf %lf %lf %lf %lf %lf %lf",
+		&part[i].m,
+		&part[i].r[X], &part[i].r[Y], &part[i].r[Z],
+		&part[i].v[X], &part[i].v[Y], &part[i].v[Z] );
     }
+    
+    //Calculating acceleration
+    for( i=0; i<(int)p[NPAR]; i++ )
+	direct_force( i, part[i].a );
 	
     fclose( file );
 
@@ -137,32 +145,29 @@ int IC_reader( struct particle particles[],
 
 
 /**************************************************************************************************
- NAME:       out_particles
+ NAME:       out_snapshot
  FUNCTION:   print information of forces of each particles
- INPUTS:     particle structure, output file name, parameters
+ INPUTS:     output file name
  RETURN:     0
 **************************************************************************************************/
-int out_particles( struct particle particles[],
-		   char filename[],
-		   float *p )
+int out_snapshot( char filename[] )
 {
-    int n, nh;
+    int i;
     FILE *file;
     
     //File Detection
     file = fopen( filename, "w" );
 
     //writing data
-    for( n=0; n<(int)p[NPAR]; n++ )
+    for( i=0; i<(int)p[NPAR]; i++ )
     {
-	fprintf( file, "%d\t%lf\t%lf\t%lf\n", 
-	n, 
-	particles[n].f[X], particles[n].f[Y], particles[n].f[Z] );
+	fprintf( file, "%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\n", 
+	part[i].m,
+	part[i].r[X], part[i].r[Y], part[i].r[Z],
+	part[i].v[X], part[i].v[Y], part[i].v[Z] );
     }
 	
     fclose( file );
-
-    printf( "  * The file '%s' has been saved!\n", filename );
 
     return 0;
 }

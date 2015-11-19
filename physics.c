@@ -14,9 +14,9 @@ double distance( double r1[3],
     double dist = 0;
     
     for( i=0; i<3; i++ )
-	dist += (r1[i]-r2[i])*(r1[i]-r2[i]);
+	dist += ( r1[i] - r2[i] )*( r1[i] - r2[i] );
     
-    return pow(dist, 0.5);
+    return pow( dist, 0.5 );
 }
 
 
@@ -34,7 +34,7 @@ double magnitude( double r[3] )
     for( i=0; i<3; i++ )
 	mag += r[i]*r[i];
     
-    return pow(mag, 0.5);
+    return pow( mag, 0.5 );
 }
 
 
@@ -42,33 +42,39 @@ double magnitude( double r[3] )
 /**************************************************************************************************
  NAME:	     direct_force
  FUNCTION:   returns the force calculation using direct force
- INPUTS:     particles, parameters
+ INPUTS:     particle id, acceleration array
  RETURN:     0
 **************************************************************************************************/
-int direct_force( struct particle *particles,
-		  float *p )
+int direct_force( int i,
+		  double a[3] )
 {
-    int i, j, ic;
+    int j, ic;
     double dist;
+    double rj[3];
       
-    //Sweeping all the particles
-    for( i=0; i<(int)p[NPAR]; i++ )
-    {
-	//Initializing force
-	for( ic=0; ic<3; ic++ )
-	    particles[i].f[ic] = 0;
+    //Initializing acceleration
+    for( ic=0; ic<3; ic++ )
+	a[ic] = 0;
 	  
-	for( j=0; j<(int)p[NPAR]; j++ )
-	    if( i != j )
-	    {
-		//Calculating distance
-		dist = pow(pow(distance( particles[i].r, particles[j].r ),2) + p[EPSS]*p[EPSS], 0.5);
-		for( ic=0; ic<3; ic++ )
-		    particles[i].f[ic] += -GC*particles[j].m/pow( dist,3 )*( particles[i].r[ic] - particles[j].r[ic] );
-	    }
-	for( ic=0; ic<3; ic++ )
-	    particles[i].f[ic] *= particles[i].m;
-    }
+    for( j=0; j<(int)p[NPAR]; j++ )
+	if( i != j )
+	{
+	    for( ic=0; ic<3; ic++ )
+		rj[ic] = part[j].r[ic];
+	    //Periodic box
+#ifdef PERIODIC_BOX
+	    for( ic=0; ic<3; ic++ )
+		if( part[j].r[ic] - part[i].r[ic] >= p[LBOX]/2.0 )
+		    rj[ic] -= p[LBOX];
+		else if( part[j].r[ic] - part[i].r[ic] < -p[LBOX]/2.0 )
+		    rj[ic] += p[LBOX];
+#endif
+	    //Calculating distance
+	    dist = distance( part[i].r, rj );
+	    dist = pow( dist*dist + p[EPSS]*p[EPSS], 0.5 );
+	    for( ic=0; ic<3; ic++ )
+		a[ic] += -GC*part[j].m/pow( dist,3 )*( part[i].r[ic] - rj[ic] );
+	}
     
     return 0;
 }

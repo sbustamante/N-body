@@ -9,8 +9,8 @@
 //Macros for Parameters
 #define LBOX		0		//Length of the Simulation
 #define NPAR		1		//Number of Particles
-#define NHIE		2		//Maximal number of hierarchies
-#define THEC		3		//Threshold angle
+#define TMAX		2		//Integration time
+#define TSTP		3		//Time step
 #define EPSS		4		//Epsilon softening
 
 //Macros of Physical constants
@@ -25,7 +25,6 @@
 /**************************************************************************************************
 			      STRUCTURES
 **************************************************************************************************/
-//Structure of particles including tree information
 struct particle
 {
     //Mass
@@ -34,10 +33,19 @@ struct particle
     double r[3];
     //Velocity
     double v[3];
-    //Force
-    double f[3];
+    //Acceleration
+    double a[3];
 };
 
+
+/**************************************************************************************************
+			      GLOBALS
+**************************************************************************************************/
+//Parameters
+float p[NMAX1];
+//Structures
+struct particle *part;
+    
 
 /**************************************************************************************************
 			      HEADERS

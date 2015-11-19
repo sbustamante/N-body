@@ -1,18 +1,18 @@
 #**************************************************************************************************
-#	TREE CODE: CONFIGURATION FILE
+#	NBODY: CONFIGURATION FILE
 #**************************************************************************************************
 #
 #Box Length [arbitrary units]
-lbox		=	1
+lbox		=	20
 #
 #Number of Particles
-npar		=	500
+npar		=	344
 #
-#Maximal number of hierarchies
-nhie		=	6
+#Integration time
+tmax		=	10
 #
-#Threshold angle
-thec		=	0.2
+#Time step
+tstp		=	0.005
 #
 #Softening parameter
-epss		=	0.001
+epss		=	0.05
