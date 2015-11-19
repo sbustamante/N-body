@@ -24,7 +24,8 @@ int main( int argc, char *argv[] )
 #ifdef INITIAL_CONDITIONS
 #else
     //Reading ICs
-    IC_reader( argv[2] );
+    if( IC_reader( argv[2] ) )
+	return 0;
 #endif
     
     //Integration
