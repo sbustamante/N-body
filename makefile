@@ -12,6 +12,8 @@
 # OPT   +=  -DINITIAL_CONDITIONS
 #Periodic conditions
 OPT   +=  -DPERIODIC_BOX
+#Potential energy
+OPT   +=  -DEVAL_POTENTIAL
 
 #--------------------------------------------------------------------------------------------------
 # Find below the compilation options

@@ -14,9 +14,10 @@ int parameter_index( char parameter_name[] )
     char *parameter_names[NMAX1];
     parameter_names[LBOX] = "lbox";
     parameter_names[NPAR] = "npar";
+    parameter_names[EPSS] = "epss";
     parameter_names[TMAX] = "tmax";
     parameter_names[TSTP] = "tstp";
-    parameter_names[EPSS] = "epss";
+    parameter_names[SSTP] = "sstp";
     
     //Searching index
     for( i=0; i<NMAX1; i++ )
@@ -88,7 +89,7 @@ int read_parameters( char filename[] )
     while( getc( file_values ) != EOF )
     {
 	fscanf( file_names, "%s", names );
-	fscanf( file_values, "%f", &p[ parameter_index( names ) ] );
+	fscanf( file_values, "%lf", &p[ parameter_index( names ) ] );
     }
 	
     fclose( file_names );
@@ -126,10 +127,11 @@ int IC_reader( char filename[] )
     //Reading data
     for( i=0; i<(int)p[NPAR]; i++ )
     {
-	fscanf( file,"%lf %lf %lf %lf %lf %lf %lf",
+	fscanf( file,"%lf %lf %lf %lf %lf %lf %lf %d %d %d",
 		&part[i].m,
 		&part[i].r[X], &part[i].r[Y], &part[i].r[Z],
-		&part[i].v[X], &part[i].v[Y], &part[i].v[Z] );
+		&part[i].v[X], &part[i].v[Y], &part[i].v[Z],
+		&part[i].typ, &part[i].int_typ, &part[i].print );
     }
     
     //Calculating acceleration
@@ -160,13 +162,40 @@ int out_snapshot( char filename[] )
 
     //writing data
     for( i=0; i<(int)p[NPAR]; i++ )
-    {
-	fprintf( file, "%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\n", 
-	part[i].m,
-	part[i].r[X], part[i].r[Y], part[i].r[Z],
-	part[i].v[X], part[i].v[Y], part[i].v[Z] );
-    }
+	//Only printable particles
+	if( part[i].print || i==0 )
+	{
+	    fprintf( file, "%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%lf\t%d\n", 
+	    part[i].m,
+	    part[i].r[X], part[i].r[Y], part[i].r[Z],
+	    part[i].v[X], part[i].v[Y], part[i].v[Z],
+	    part[i].typ );
+	}
 	
+    fclose( file );
+
+    return 0;
+}
+
+
+/**************************************************************************************************
+ NAME:       out_energy
+ FUNCTION:   print information of the energy
+ INPUTS:     output file name, time, kinetic energy, potential energy
+ RETURN:     0
+**************************************************************************************************/
+int out_energy( char filename[], 
+		double t,
+		double et, 
+		double ep )
+{
+    int i;
+    FILE *file;
+    
+    file = fopen( filename, "a" );
+
+    fprintf( file, "%lf\t%lf\t%lf\t%lf\n", t, et, ep, et + ep );
+
     fclose( file );
 
     return 0;

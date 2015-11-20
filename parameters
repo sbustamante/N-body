@@ -3,16 +3,19 @@
 #**************************************************************************************************
 #
 #Box Length [arbitrary units]
-lbox		=	20
+lbox		=	1                   
 #
 #Number of Particles
-npar		=	344
-#
-#Integration time
-tmax		=	10
-#
-#Time step
-tstp		=	0.005
+npar		=	10                   
 #
 #Softening parameter
-epss		=	0.05
+epss		=	0.1                    
+#
+#Integration time
+tmax		=	1                     
+#
+#Time step
+tstp		=	0.1                       
+#
+#Snapshot step
+sstp		=	0.1                       

@@ -55,9 +55,13 @@ int direct_force( int i,
     //Initializing acceleration
     for( ic=0; ic<3; ic++ )
 	a[ic] = 0;
-	  
+    
+    //Initializing potential
+    part[i].ep = 0;  
+    
     for( j=0; j<(int)p[NPAR]; j++ )
-	if( i != j )
+	//Checking self contribution and type of interacting particles
+	if( i != j && ( part[i].int_typ == part[j].typ || part[i].int_typ == 0 ) )
 	{
 	    for( ic=0; ic<3; ic++ )
 		rj[ic] = part[j].r[ic];
@@ -74,7 +78,37 @@ int direct_force( int i,
 	    dist = pow( dist*dist + p[EPSS]*p[EPSS], 0.5 );
 	    for( ic=0; ic<3; ic++ )
 		a[ic] += -GC*part[j].m/pow( dist,3 )*( part[i].r[ic] - rj[ic] );
+#ifdef EVAL_POTENTIAL
+	    //Potential energy
+	    part[i].ep += -GC*part[i].m*part[j].m/dist;
+#endif
 	}
+    return 0;
+}
+
+
+/**************************************************************************************************
+ NAME:	     energy
+ FUNCTION:   returns the energy of the system, i.e. kinetic and potential
+ INPUTS:     kinetic energy pointer, potential energy pointer
+ RETURN:     0
+**************************************************************************************************/
+int energy( double *et,
+	    double *ep )
+{
+    int i, ic;
+    double dist;
+    double rj[3];
+      
+    //Initializing energies
+    *et = 0;
+    *ep = 0;
+    
+    for( i=0; i<(int)p[NPAR]; i++ )
+    {
+	*et += 0.5*part[i].m*pow( magnitude( part[i].v ), 2 );
+	*ep += part[i].ep;
+    }
     
     return 0;
 }

@@ -9,9 +9,10 @@
 //Macros for Parameters
 #define LBOX		0		//Length of the Simulation
 #define NPAR		1		//Number of Particles
-#define TMAX		2		//Integration time
-#define TSTP		3		//Time step
-#define EPSS		4		//Epsilon softening
+#define EPSS		2		//Epsilon softening
+#define TMAX		3		//Integration time
+#define TSTP		4		//Time step
+#define SSTP		5		//Snapshot step
 
 //Macros of Physical constants
 #define GC		1		//Cavendish Constant
@@ -35,6 +36,16 @@ struct particle
     double v[3];
     //Acceleration
     double a[3];
+    //Potential
+    double ep;
+    
+    //Type of particle
+    int typ;
+    //Interacting particles
+    int int_typ;
+    
+    //Printable particle
+    int print;
 };
 
 
@@ -42,7 +53,7 @@ struct particle
 			      GLOBALS
 **************************************************************************************************/
 //Parameters
-float p[NMAX1];
+double p[NMAX1];
 //Structures
 struct particle *part;
     
